@@ -1,0 +1,321 @@
+#!/bin/sh
+# Fix up mount points device node names.
+# This is broken pending systemd > 191-2 so hack the generated unit files :(
+# See: https://bugzilla.redhat.com/show_bug.cgi?id=859297
+
+DEVICE=$1
+shift
+
+echo "Fixing mount-points for device $DEVICE"
+
+case "$DEVICE" in
+    "FP2")
+        sed -i \
+            -e 's block/platform/msm_sdcc.1/by-name/system mmcblk0p13 ' \
+            -e 's block/platform/msm_sdcc.1/by-name/userdata mmcblk0p20 ' \
+            -e 's block/platform/msm_sdcc.1/by-name/recovery mmcblk0p16 ' \
+            -e 's block/platform/msm_sdcc.1/by-name/persist mmcblk0p14 ' \
+            -e 's block/platform/msm_sdcc.1/by-name/modem mmcblk0p1 ' \
+            -e 's block/platform/msm_sdcc.1/by-name/modemst1 mmcblk0p11 ' \
+            -e 's block/platform/msm_sdcc.1/by-name/modemst2 mmcblk0p12 ' \
+            -e 's block/platform/msm_sdcc.1/by-name/fsg mmcblk0p17 ' \
+            -e 's block/platform/msm_sdcc.1/by-name/fsc mmcblk0p18 ' \
+            -e 's block/platform/msm_sdcc.1/by-name/dbi mmcblk0p3 ' \
+            -e 's block/platform/msm_sdcc.1/by-name/cache mmcblk0p15 ' \
+            -e 's block/platform/msm_sdcc.1/by-name/boot mmcblk0p8 ' \
+            "$@"
+        ;;
+
+    "onyx")
+        sed -i \
+            -e 's block/platform/msm_sdcc.1/by-name/boot mmcblk0p7 ' \
+            -e 's block/platform/msm_sdcc.1/by-name/system mmcblk0p27 ' \
+            -e 's block/platform/msm_sdcc.1/by-name/userdata mmcblk0p28 ' \
+            -e 's block/platform/msm_sdcc.1/by-name/cache mmcblk0p15 ' \
+            -e 's block/platform/msm_sdcc.1/by-name/persist mmcblk0p14 ' \
+            -e 's block/platform/msm_sdcc.1/by-name/modem mmcblk0p1 ' \
+            "$@"
+        ;;
+
+    "bullhead")
+        sed -i \
+            -e 's block/platform/soc.0/f9824900.sdhci/by-name/modem mmcblk0p1 ' \
+            -e 's block/platform/soc.0/f9824900.sdhci/by-name/persist mmcblk0p24 ' \
+            -e 's block/platform/soc.0/f9824900.sdhci/by-name/vendor mmcblk0p39 ' \
+            -e 's block/platform/soc.0/f9824900.sdhci/by-name/system mmcblk0p41 ' \
+            -e 's block/platform/soc.0/f9824900.sdhci/by-name/userdata mmcblk0p45 ' \
+            "$@"
+        ;;
+
+    "hammerhead")
+        sed -i \
+            -e 's block/platform/msm_sdcc.1/by-name/modem mmcblk0p1 ' \
+            -e 's block/platform/msm_sdcc.1/by-name/persist mmcblk0p16 ' \
+            -e 's block/platform/msm_sdcc.1/by-name/system mmcblk0p25 ' \
+            -e 's block/platform/msm_sdcc.1/by-name/userdata mmcblk0p28 ' \
+            "$@"
+        ;;
+
+    "mako")
+        sed -i \
+            -e 's block/platform/msm_sdcc.1/by-name/modem mmcblk0p1 ' \
+            -e 's block/platform/msm_sdcc.1/by-name/persist mmcblk0p20 ' \
+            -e 's block/platform/msm_sdcc.1/by-name/system mmcblk0p21 ' \
+            -e 's block/platform/msm_sdcc.1/by-name/userdata mmcblk0p23 ' \
+            "$@"
+        ;;
+
+    "grouper")
+        sed -i \
+            -e 's block/platform/sdhci-tegra.3/by-name/APP mmcblk0p3 ' \
+            -e 's block/platform/sdhci-tegra.3/by-name/CAC mmcblk0p4 ' \
+            -e 's block/platform/sdhci-tegra.3/by-name/UDA mmcblk0p9 ' \
+            -e 's block/platform/sdhci-tegra.3/by-name/MSC mmcblk0p5 ' \
+            -e 's block/platform/sdhci-tegra.3/by-name/LNX mmcblk0p2 ' \
+            -e 's block/platform/sdhci-tegra.3/by-name/SOS mmcblk0p1 ' \
+            "$@"
+        ;;
+
+    "tilapia")
+        sed -i \
+            -e 's block/platform/sdhci-tegra.3/by-name/APP mmcblk0p3 ' \
+            -e 's block/platform/sdhci-tegra.3/by-name/CAC mmcblk0p5 ' \
+            -e 's block/platform/sdhci-tegra.3/by-name/UDA mmcblk0p10 ' \
+            -e 's block/platform/sdhci-tegra.3/by-name/MSC mmcblk0p6 ' \
+            -e 's block/platform/sdhci-tegra.3/by-name/LNX mmcblk0p2 ' \
+            -e 's block/platform/sdhci-tegra.3/by-name/SOS mmcblk0p1 ' \
+            "$@"
+        ;;
+
+    "i9305" | "encore" | "n7000" | "n7100" | "i9300" | "anzu" | \
+    "coconut" | "haida" | "hallon" | "iyokan" | "mango" | "phoenix" | \
+    "satsuma" | "smultron" | "urushi" | "zeus" | "jenad")
+    # Untested for other revisions of Samsung GT-S6500:
+    # | "jena" | "trebon")
+	sed -i \
+	    -e 's /block/ / ' \
+	    "$@"
+	;;
+
+    "p3100" | "p3110" | "p3113" | "p5100" | "p5110" | "p5113" | "espressowifi" | "espresso3g")
+        sed -i \
+            -e 's block/platform/omap/omap_hsmmc.1/by-name/DATAFS mmcblk0p10 ' \
+            -e 's block/platform/omap/omap_hsmmc.1/by-name/KERNEL mmcblk0p5 ' \
+            -e 's block/platform/omap/omap_hsmmc.1/by-name/FACTORYFS mmcblk0p9 ' \
+            -e 's block/platform/omap/omap_hsmmc.1/by-name/EFS mmcblk0p1 ' \
+            -e 's block/platform/omap/omap_hsmmc.1/by-name/CACHE mmcblk0p7 ' \
+            "$@"
+        ;;
+
+    "maguro")
+        sed -i \
+            -e 's block/platform/omap/omap_hsmmc.0/by-name/system mmcblk0p10 ' \
+            -e 's block/platform/omap/omap_hsmmc.0/by-name/cache mmcblk0p11 ' \
+            -e 's block/platform/omap/omap_hsmmc.0/by-name/userdata mmcblk0p12 ' \
+            -e 's block/platform/omap/omap_hsmmc.0/by-name/misc mmcblk0p5 ' \
+            -e 's block/platform/omap/omap_hsmmc.0/by-name/boot mmcblk0p7 ' \
+            -e 's block/platform/omap/omap_hsmmc.0/by-name/recovery mmcblk0p8 ' \
+            -e 's block/platform/omap/omap_hsmmc.0/by-name/sbl mmcblk0p2 ' \
+            -e 's block/platform/omap/omap_hsmmc.0/by-name/xloader mmcblk0p1 ' \
+            -e 's block/platform/omap/omap_hsmmc.0/by-name/radio mmcblk0p9 ' \
+            -e 's block/platform/omap/omap_hsmmc.0/by-name/efs mmcblk0p3 ' \
+            "$@"
+        ;;
+
+    "bacon")
+        sed -i \
+            -e 's block/platform/msm_sdcc.1/by-name/modem mmcblk0p1 ' \
+            -e 's block/platform/msm_sdcc.1/by-name/persist mmcblk0p15 ' \
+            -e 's block/platform/msm_sdcc.1/by-name/system mmcblk0p14 ' \
+            -e 's block/platform/msm_sdcc.1/by-name/userdata mmcblk0p28 ' \
+            "$@"
+        ;;
+    "ace")
+       sed -i \
+            -e 's block/platform/msm_sdcc.2/by-num/p25 mmcblk0p25 ' \
+            -e 's block/platform/msm_sdcc.2/by-num/p26 mmcblk0p26 ' \
+            -e 's block/platform/msm_sdcc.2/by-num/p27 mmcblk0p27 ' \
+            -e 's block/platform/msm_sdcc.2/by-num/p28 mmcblk0p28 ' \
+            "$@"
+        ;;
+    "flo"|"deb")
+        sed -i \
+            -e 's block/platform/msm_sdcc.1/by-name/persist mmcblk0p4 ' \
+            -e 's block/platform/msm_sdcc.1/by-name/boot mmcblk0p14 ' \
+            -e 's block/platform/msm_sdcc.1/by-name/system mmcblk0p22 ' \
+            -e 's block/platform/msm_sdcc.1/by-name/userdata mmcblk0p30 ' \
+            -e 's block/platform/msm_sdcc.1/by-name/radio mmcblk0p1 ' \
+            -e 's block/platform/msm_sdcc.1/by-name/cache mmcblk0p4 ' \
+            -e 's block/platform/msm_sdcc.1/by-name/recovery mmcblk0p25 ' \
+            -e 's block/platform/msm_sdcc.1/by-name/misc mmcblk0p24 ' \
+            "$@"
+        ;;
+    "yuga")
+        sed -i \
+            -e 's block/platform/msm_sdcc.1/by-name/boot mmcblk0p17 ' \
+            -e 's block/platform/msm_sdcc.1/by-name/system mmcblk0p24 ' \
+            -e 's block/platform/msm_sdcc.1/by-name/cache mmcblk0p25 ' \
+            -e 's block/platform/msm_sdcc.1/by-name/userdata mmcblk0p26 ' \
+            -e 's block/platform/msm_sdcc.1/by-name/LTALabel mmcblk1 ' \
+            "$@"
+        ;;
+    "z3c")
+    # Also called "aries" | "d5803" in aosp (called z3c in cm12.1)
+    # untested for | "sirius" | "amami" | "leo" | "tianchi")
+         sed -i \
+             -e 's block/platform/msm_sdcc.1/by-name/DDR mmcblk0p17 ' \
+             -e 's block/platform/msm_sdcc.1/by-name/FOTAKernel mmcblk0p16 ' \
+             -e 's block/platform/msm_sdcc.1/by-name/LTALabel mmcblk0p18 ' \
+             -e 's block/platform/msm_sdcc.1/by-name/TA mmcblk0p1 ' \
+             -e 's block/platform/msm_sdcc.1/by-name/aboot mmcblk0p5 ' \
+             -e 's block/platform/msm_sdcc.1/by-name/alt_aboot mmcblk0p11 ' \
+             -e 's block/platform/msm_sdcc.1/by-name/alt_dbi mmcblk0p10 ' \
+             -e 's block/platform/msm_sdcc.1/by-name/alt_rpm mmcblk0p12 ' \
+             -e 's block/platform/msm_sdcc.1/by-name/alt_s1sbl mmcblk0p9 ' \
+             -e 's block/platform/msm_sdcc.1/by-name/alt_sbl1 mmcblk0p8 ' \
+             -e 's block/platform/msm_sdcc.1/by-name/alt_tz mmcblk0p13 ' \
+             -e 's block/platform/msm_sdcc.1/by-name/apps_log mmcblk0p22 ' \
+             -e 's block/platform/msm_sdcc.1/by-name/boot mmcblk0p14 ' \
+             -e 's block/platform/msm_sdcc.1/by-name/cache mmcblk0p24 ' \
+             -e 's block/platform/msm_sdcc.1/by-name/dbi mmcblk0p4 ' \
+             -e 's block/platform/msm_sdcc.1/by-name/fsg mmcblk0p21 ' \
+             -e 's block/platform/msm_sdcc.1/by-name/modemst1 mmcblk0p19 ' \
+             -e 's block/platform/msm_sdcc.1/by-name/modemst2 mmcblk0p20 ' \
+             -e 's block/platform/msm_sdcc.1/by-name/ramdump mmcblk0p15 ' \
+             -e 's block/platform/msm_sdcc.1/by-name/rpm mmcblk0p6 ' \
+             -e 's block/platform/msm_sdcc.1/by-name/s1sbl mmcblk0p3 ' \
+             -e 's block/platform/msm_sdcc.1/by-name/sbl1 mmcblk0p2 ' \
+             -e 's block/platform/msm_sdcc.1/by-name/system mmcblk0p23 ' \
+             -e 's block/platform/msm_sdcc.1/by-name/tz mmcblk0p7 ' \
+             -e 's block/platform/msm_sdcc.1/by-name/userdata mmcblk0p25 ' \
+            "$@"
+         ;;
+    "kis3")
+       sed -i \
+            -e 's block/platform/msm_sdcc.1/by-name/system mmcblk0p12 ' \
+            -e 's block/platform/msm_sdcc.1/by-name/userdata mmcblk0p13 ' \
+            -e 's block/platform/msm_sdcc.1/by-name/cache mmcblk0p15 ' \
+            -e 's block/platform/msm_sdcc.1/by-name/boot mmcblk0p7 ' \
+            -e 's block/platform/msm_sdcc.1/by-name/recovery mmcblk0p16 ' \
+            -e 's block/platform/msm_sdcc.1/by-name/modem mmcblk0p1 ' \
+            -e 's block/platform/msm_sdcc.1/by-name/persist mmcblk0p14 ' \
+            "$@"
+        ;;
+    "m7spr")
+       sed -i \
+            -e 's block/platform/msm_sdcc.1/by-name/boot mmcblk0p35 ' \
+            -e 's block/platform/msm_sdcc.1/by-name/recovery mmcblk0p36 ' \
+            -e 's block/platform/msm_sdcc.1/by-name/system mmcblk0p37 ' \
+            -e 's block/platform/msm_sdcc.1/by-name/cache mmcblk0p38 ' \
+            -e 's block/platform/msm_sdcc.1/by-name/userdata mmcblk0p39 ' \
+            "$@"
+        ;;
+    "wt88047")
+       sed -i \
+            -e 's block/bootdevice/by-name/userdata mmcblk0p30 ' \
+            -e 's block/bootdevice/by-name/boot mmcblk0p22 ' \
+            -e 's block/bootdevice/by-name/system mmcblk0p23 ' \
+            -e 's block/bootdevice/by-name/modem mmcblk0p1 ' \
+            -e 's block/bootdevice/by-name/modemst1 mmcblk0p13 ' \
+            -e 's block/bootdevice/by-name/modemst2 mmcblk0p14 ' \
+            -e 's block/bootdevice/by-name/persist mmcblk0p25 ' \
+            "$@"
+        ;;
+    "find5")
+       sed -i \
+            -e 's block/platform/msm_sdcc.1/by-name/modem mmcblk0p1 ' \
+            -e 's block/platform/msm_sdcc.1/by-name/persist tmmcblk0p21 ' \
+            -e 's block/platform/msm_sdcc.1/by-name/system mmcblk0p19 ' \
+            -e 's block/platform/msm_sdcc.1/by-name/boot mmcblk0p18 ' \
+            -e 's block/platform/msm_sdcc.1/by-name/userdata mmcblk0p20 ' \
+            "$@"
+        ;;
+    "cancro")
+       sed -i \
+            -e 's block/platform/msm_sdcc.1/by-name/DDR mmcblk0p4 ' \
+            -e 's block/platform/msm_sdcc.1/by-name/aboot mmcblk0p7 ' \
+            -e 's block/platform/msm_sdcc.1/by-name/bk1 mmcblk0p8 ' \
+            -e 's block/platform/msm_sdcc.1/by-name/bk2 mmcblk0p11 ' \
+            -e 's block/platform/msm_sdcc.1/by-name/bk3 mmcblk0p15 ' \
+            -e 's block/platform/msm_sdcc.1/by-name/bk4 mmcblk0p17 ' \
+            -e 's block/platform/msm_sdcc.1/by-name/bk5 mmcblk0p18 ' \
+            -e 's block/platform/msm_sdcc.1/by-name/boot mmcblk0p19 ' \
+            -e 's block/platform/msm_sdcc.1/by-name/cache mmcblk0p24 ' \
+            -e 's block/platform/msm_sdcc.1/by-name/dbi mmcblk0p6 ' \
+            -e 's block/platform/msm_sdcc.1/by-name/fsc mmcblk0p14 ' \
+            -e 's block/platform/msm_sdcc.1/by-name/fsg mmcblk0p16 ' \
+            -e 's block/platform/msm_sdcc.1/by-name/logo mmcblk0p10 ' \
+            -e 's block/platform/msm_sdcc.1/by-name/misc mmcblk0p9 ' \
+            -e 's block/platform/msm_sdcc.1/by-name/modem mmcblk0p22 ' \
+            -e 's block/platform/msm_sdcc.1/by-name/modemst1 mmcblk0p12 ' \
+            -e 's block/platform/msm_sdcc.1/by-name/modemst2 mmcblk0p13 ' \
+            -e 's block/platform/msm_sdcc.1/by-name/persist mmcblk0p21 ' \
+            -e 's block/platform/msm_sdcc.1/by-name/recovery mmcblk0p20 ' \
+            -e 's block/platform/msm_sdcc.1/by-name/rpm mmcblk0p2 ' \
+            -e 's block/platform/msm_sdcc.1/by-name/sbl1 mmcblk0p1 ' \
+            -e 's block/platform/msm_sdcc.1/by-name/ssd mmcblk0p5 ' \
+            -e 's block/platform/msm_sdcc.1/by-name/system mmcblk0p23 ' \
+            -e 's block/platform/msm_sdcc.1/by-name/tz mmcblk0p3 ' \
+            -e 's block/platform/msm_sdcc.1/by-name/userdata mmcblk0p25 ' \
+            "$@"
+        ;;
+      "msm8610")
+       # Mozilla Flame 
+       sed -i \
+       -e 's block/platform/msm_sdcc.1/by-name/DDR mmcblk0p4 '\
+       -e 's block/platform/msm_sdcc.1/by-name/aboot mmcblk0p5 '\
+       -e 's block/platform/msm_sdcc.1/by-name/abootbk mmcblk0p25 '\
+       -e 's block/platform/msm_sdcc.1/by-name/boot mmcblk0p7 '\
+       -e 's block/platform/msm_sdcc.1/by-name/cache mmcblk0p14 '\
+       -e 's block/platform/msm_sdcc.1/by-name/custpack mmcblk0p28 '\
+       -e 's block/platform/msm_sdcc.1/by-name/fota mmcblk0p24 '\
+       -e 's block/platform/msm_sdcc.1/by-name/fsc mmcblk0p18 '\
+       -e 's block/platform/msm_sdcc.1/by-name/fsg mmcblk0p17 '\
+       -e 's block/platform/msm_sdcc.1/by-name/misc mmcblk0p16 '\
+       -e 's block/platform/msm_sdcc.1/by-name/modem mmcblk0p1 '\
+       -e 's block/platform/msm_sdcc.1/by-name/modemst1 mmcblk0p10 '\
+       -e 's block/platform/msm_sdcc.1/by-name/modemst2 mmcblk0p11 '\
+       -e 's block/platform/msm_sdcc.1/by-name/pad mmcblk0p9 '\
+       -e 's block/platform/msm_sdcc.1/by-name/persist mmcblk0p13 '\
+       -e 's block/platform/msm_sdcc.1/by-name/recovery mmcblk0p15 '\
+       -e 's block/platform/msm_sdcc.1/by-name/rpm mmcblk0p6 '\
+       -e 's block/platform/msm_sdcc.1/by-name/rpmbk mmcblk0p26 '\
+       -e 's block/platform/msm_sdcc.1/by-name/sbl1 mmcblk0p2 '\
+       -e 's block/platform/msm_sdcc.1/by-name/sdi mmcblk0p3 '\
+       -e 's block/platform/msm_sdcc.1/by-name/secro mmcblk0p23 '\
+       -e 's block/platform/msm_sdcc.1/by-name/splash mmcblk0p20 '\
+       -e 's block/platform/msm_sdcc.1/by-name/ssd mmcblk0p19 '\
+       -e 's block/platform/msm_sdcc.1/by-name/system mmcblk0p12 '\
+       -e 's block/platform/msm_sdcc.1/by-name/traceability mmcblk0p21 '\
+       -e 's block/platform/msm_sdcc.1/by-name/tuningpara mmcblk0p22 '\
+       -e 's block/platform/msm_sdcc.1/by-name/tz mmcblk0p8 '\
+       -e 's block/platform/msm_sdcc.1/by-name/tzbk mmcblk0p27 '\
+       -e 's block/platform/msm_sdcc.1/by-name/usbmc mmcblk0p30 '\
+       -e 's block/platform/msm_sdcc.1/by-name/userdata mmcblk0p29 '\
+        "$@"
+      ;;
+    "gts210ltexx"|"gts210wifi")
+       sed -i \
+            -e 's block/platform/15540000.dwmmc0/by-name/BOOT mmcblk0p9 ' \
+            -e 's block/platform/15540000.dwmmc0/by-name/CACHE mmcblk0p20 ' \
+            -e 's block/platform/15540000.dwmmc0/by-name/EFS mmcblk0p3 ' \
+            -e 's block/platform/15540000.dwmmc0/by-name/SYSTEM mmcblk0p19 ' \
+            -e 's block/platform/15540000.dwmmc0/by-name/USERDATA mmcblk0p22 ' \
+            "$@"
+        ;;
+    *)
+	cat <<EOF
+
+****************************************************************
+****************************************************************
+ERROR: $DEVICE does not have mountpoint fixup data - see
+       SailfishOS HADK for details on how to fix this
+       Check: device/$VENDOR/$DEVICE/recovery.fstab
+****************************************************************
+****************************************************************
+
+EOF
+        exit 1
+        ;;
+esac
+
